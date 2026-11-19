@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Leafbound_Project.vcxproj" />
+  <Project Path="Leafbound_Project.vcxproj" Id="cac9e750-f503-4828-ad87-5d3e8f72926f" />
 </Solution>
