@@ -14,6 +14,9 @@ int main(int argc, char* argv[]) {
 				running = false;
 			}
 		}
+		SDL_SetRenderDrawColor(renderer, 100, 25, 10000, 45);
+		SDL_RenderClear(renderer); 
+		SDL_RenderPresent(renderer);
 		SDL_Delay(16);
 	}
 	SDL_DestroyWindow(window);
