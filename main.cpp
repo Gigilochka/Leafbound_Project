@@ -20,6 +20,16 @@ int main(int argc, char* argv[]) {
 		}
 		SDL_SetRenderDrawColor(renderer, 100, 55, 25, 255);
 		SDL_RenderClear(renderer); 
+
+		SDL_Rect rect;
+		rect.w = 100;
+		rect.h = 100;
+		rect.x = 100;
+		rect.y = 100;
+
+		SDL_SetRenderDrawColor(renderer, 20, 400, 123, 255);
+		SDL_RenderFillRect(renderer, &rect);
+
 		SDL_RenderPresent(renderer);
 		SDL_Delay(16);
 	}
