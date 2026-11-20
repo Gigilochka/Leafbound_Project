@@ -10,18 +10,22 @@ int main(int argc, char* argv[]) {
 	SDL_Event event;
 	while (running) {
 		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT) {
+			switch (event.type) {
+			case SDL_QUIT:
 				running = false;
+				break;
+			default:
+				break;
 			}
 		}
-		SDL_SetRenderDrawColor(renderer, 100, 25, 10000, 45);
+		SDL_SetRenderDrawColor(renderer, 100, 55, 25, 255);
 		SDL_RenderClear(renderer); 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(16);
 	}
 	SDL_DestroyWindow(window);
-
-
+	SDL_DestroyRenderer(renderer);
+	SDL_Quit();
 
 
 
