@@ -60,22 +60,43 @@ void RunGame(Game& game) {
 
         UpdatePlayer(game.player, state, game.ladderRect);
 
+        int leftMargin = 200;
+        int rightMargin = SCREEN_WIDTH - 300;
+
+        int playerScreenX = game.player.destRect.x - game.camera.x;
+
+        if (playerScreenX > rightMargin) {
+            game.camera.x = game.player.destRect.x - rightMargin;
+        }
+        else if (playerScreenX < leftMargin) {
+            game.camera.x = game.player.destRect.x - leftMargin;
+        }
+
+        if (game.camera.x < 0) game.camera.x = 0;
+        if (game.camera.x > LEVEL_WIDTH - SCREEN_WIDTH) game.camera.x = LEVEL_WIDTH - SCREEN_WIDTH;
+
         SDL_SetRenderDrawColor(game.renderer, 240, 230, 140, 255);
         SDL_RenderClear(game.renderer);
 
-        if (game.bgTexture != nullptr) {
-            SDL_RenderCopy(game.renderer, game.bgTexture, nullptr, nullptr);
-        }
-        if (game.ladderTexture != nullptr) {
-            SDL_RenderCopy(game.renderer, game.ladderTexture, nullptr, &game.ladderRect);
+        for (int i = 0; i < 5; i++) {
+            SDL_Rect bgRect = { i * SCREEN_WIDTH - game.camera.x, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+            SDL_RendererFlip bgFlip = (i % 2 == 1) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+            SDL_RenderCopyEx(game.renderer, game.bgTexture, nullptr, &bgRect, 0.0, NULL, bgFlip);
         }
 
-        RenderPlayer(game.player, game.renderer);
+        if (game.ladderTexture != nullptr) {
+            SDL_Rect renderLadder = game.ladderRect;
+            renderLadder.x -= game.camera.x;
+            SDL_RenderCopy(game.renderer, game.ladderTexture, nullptr, &renderLadder);
+        }
+
+        RenderPlayer(game.player, game.renderer, game.camera);
 
         SDL_RenderPresent(game.renderer);
         SDL_Delay(16);
     }
 }
+
 
 void CleanupGame(Game& game) {
     DestroyPlayer(game.player);

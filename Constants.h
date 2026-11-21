@@ -43,6 +43,9 @@ const int SPRITE_CLIMB_COUNT = 4;
 const int ANIMATION_CLIMB_SPEED = 140;
 const int CLIMB_SPEED = 3;
 
+// Настройка экрана
+const int LEVEL_WIDTH = 4000;
+
 
 
 

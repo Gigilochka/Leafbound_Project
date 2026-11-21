@@ -29,5 +29,5 @@ struct Player {
 
 void InitPlayer(Player& player, SDL_Renderer* renderer);
 void UpdatePlayer(Player& player, const Uint8* state, const SDL_Rect& ladderRect);
-void RenderPlayer(const Player& player, SDL_Renderer* renderer);
+void RenderPlayer(const Player& player, SDL_Renderer* renderer, const SDL_Rect& camera);
 void DestroyPlayer(Player& player);

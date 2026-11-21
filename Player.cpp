@@ -158,8 +158,8 @@ void UpdatePlayer(Player& player, const Uint8* state, const SDL_Rect& ladderRect
         player.destRect.x = SCREEN_MARGIN;
         player.isMoving = false;
     }
-    if (player.destRect.x + player.destRect.w >= SCREEN_WIDTH - SCREEN_MARGIN) {
-        player.destRect.x = SCREEN_WIDTH - SCREEN_MARGIN - player.destRect.w;
+    if (player.destRect.x + player.destRect.w >= LEVEL_WIDTH - SCREEN_MARGIN) {
+        player.destRect.x = LEVEL_WIDTH - SCREEN_MARGIN - player.destRect.w;
         player.isMoving = false;
     }
     if (player.destRect.y < 0) player.destRect.y = 0;
@@ -167,14 +167,16 @@ void UpdatePlayer(Player& player, const Uint8* state, const SDL_Rect& ladderRect
     UpdateAnimation(player, state);
 }
 
-void RenderPlayer(const Player& player, SDL_Renderer* renderer) {
+void RenderPlayer(const Player& player, SDL_Renderer* renderer, const SDL_Rect& camera) {
     SDL_Texture* tex = player.idleTexture;
     if (player.isClimbing) tex = player.climbTexture;
     else if (!player.isGrounded) tex = (player.velocityY < 0) ? player.jumpTexture : player.fallTexture;
     else if (player.isMoving) tex = player.skipTexture;
 
     if (tex != nullptr) {
-        SDL_RenderCopyEx(renderer, tex, &player.srcRect, &player.destRect, 0.0, NULL, player.flip);
+        SDL_Rect renderRect = player.destRect;
+        renderRect.x -= camera.x;
+        SDL_RenderCopyEx(renderer, tex, &player.srcRect, &renderRect, 0.0, NULL, player.flip);
     }
 }
 
