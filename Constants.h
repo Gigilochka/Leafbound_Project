@@ -38,5 +38,11 @@ const int ANIMATION_JUMP_SPEED = 120;
 const int SPRITE_FALL_COUNT = 4;
 const int ANIMATION_FALL_SPEED = 120;
 
+// Настройка анимаций подъема по лестнице
+const int SPRITE_CLIMB_COUNT = 4;
+const int ANIMATION_CLIMB_SPEED = 140;
+const int CLIMB_SPEED = 3;
+
+
 
 

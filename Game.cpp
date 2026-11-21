@@ -37,6 +37,11 @@ bool InitGame(Game& game) {
         std::cout << "Ошибка загрузки фона: " << IMG_GetError() << std::endl;
     }
 
+    game.ladderTexture = IMG_LoadTexture(game.renderer, "assets/ladder.png");
+    if (game.ladderTexture == nullptr) {
+        std::cout << "Ошибка загрузки лестницы: " << IMG_GetError() << std::endl;
+    }
+
     InitPlayer(game.player, game.renderer);
     game.running = true;
     return true;
@@ -53,13 +58,16 @@ void RunGame(Game& game) {
             }
         }
 
-        UpdatePlayer(game.player, state);
+        UpdatePlayer(game.player, state, game.ladderRect);
 
         SDL_SetRenderDrawColor(game.renderer, 240, 230, 140, 255);
         SDL_RenderClear(game.renderer);
 
         if (game.bgTexture != nullptr) {
             SDL_RenderCopy(game.renderer, game.bgTexture, nullptr, nullptr);
+        }
+        if (game.ladderTexture != nullptr) {
+            SDL_RenderCopy(game.renderer, game.ladderTexture, nullptr, &game.ladderRect);
         }
 
         RenderPlayer(game.player, game.renderer);
@@ -72,6 +80,10 @@ void RunGame(Game& game) {
 void CleanupGame(Game& game) {
     DestroyPlayer(game.player);
 
+    if (game.ladderTexture != nullptr) {
+        SDL_DestroyTexture(game.ladderTexture);
+        game.ladderTexture = nullptr;
+    }
     if (game.bgTexture != nullptr) {
         SDL_DestroyTexture(game.bgTexture);
         game.bgTexture = nullptr;
