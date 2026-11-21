@@ -63,7 +63,6 @@ static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& l
 
     if (player.destRect.y + player.destRect.h <= ladderRect.y + 5) {
         player.destRect.y = ladderRect.y - player.destRect.h;
-        player.destRect.x = ladderRect.x + 25;
         player.isClimbing = false;
         player.isGrounded = true;
         player.climbCooldown = 25;
