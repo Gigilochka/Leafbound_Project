@@ -34,12 +34,12 @@ void InitPlayer(Player& player, SDL_Renderer* renderer) {
 static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& ladderRect) {
     if (player.climbCooldown > 0) player.climbCooldown--;
 
-    SDL_Rect climbZone = { ladderRect.x + 5, ladderRect.y - 15, ladderRect.w / 3, ladderRect.h + 15 };
+    SDL_Rect climbZone = { ladderRect.x - 10, ladderRect.y - 15, ladderRect.w / 2 + 10, ladderRect.h + 15 };
     bool onLadder = SDL_HasIntersection(&player.destRect, &climbZone);
     bool pressingSide = state[SDL_SCANCODE_A] || state[SDL_SCANCODE_D];
 
     if (!player.isClimbing && onLadder && !pressingSide && player.climbCooldown == 0) {
-        bool wantUp = state[SDL_SCANCODE_W] && (player.destRect.y + player.destRect.h > ladderRect.y + 15);
+        bool wantUp = state[SDL_SCANCODE_W] && (player.destRect.y + player.destRect.h > ladderRect.y + 25);
         bool wantDown = state[SDL_SCANCODE_S] && (player.destRect.y < GROUND_Y);
 
         if (wantUp || wantDown) {
@@ -47,6 +47,11 @@ static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& l
             player.isGrounded = false;
             player.velocityY = 0.0f;
             player.destRect.x = climbZone.x + climbZone.w / 2 - player.destRect.w / 2;
+
+            if (wantDown) {
+                player.destRect.y += 6;
+            }
+
         }
     }
 
@@ -54,7 +59,7 @@ static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& l
 
     if (state[SDL_SCANCODE_SPACE]) {
         player.isClimbing = false;
-        player.climbCooldown = 25;
+        player.climbCooldown = 18;
         return;
     }
 
@@ -65,7 +70,7 @@ static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& l
         player.destRect.y = ladderRect.y - player.destRect.h;
         player.isClimbing = false;
         player.isGrounded = true;
-        player.climbCooldown = 25;
+        player.climbCooldown = 18;
     }
     else if (player.destRect.y >= GROUND_Y) {
         player.destRect.y = GROUND_Y;
@@ -80,10 +85,8 @@ static void UpdateClimbing(Player& player, const Uint8* state, const SDL_Rect& l
 
 static void UpdateMovement(Player& player, const Uint8* state, const SDL_Rect& ladderRect) {
     int prevBottom = player.destRect.y + player.destRect.h;
-    SDL_Rect climbZone = { ladderRect.x + 5, ladderRect.y - 15, ladderRect.w / 3, ladderRect.h + 15 };
-    bool onLadder = SDL_HasIntersection(&player.destRect, &climbZone);
 
-    if ((state[SDL_SCANCODE_W] || state[SDL_SCANCODE_SPACE]) && player.isGrounded && !onLadder) {
+    if ((state[SDL_SCANCODE_W] || state[SDL_SCANCODE_SPACE]) && player.isGrounded && player.climbCooldown == 0) {
         player.velocityY = JUMP_FORCE;
         player.isGrounded = false;
     }
@@ -166,6 +169,7 @@ void UpdatePlayer(Player& player, const Uint8* state, const SDL_Rect& ladderRect
 
     UpdateAnimation(player, state);
 }
+
 
 void RenderPlayer(const Player& player, SDL_Renderer* renderer, const SDL_Rect& camera) {
     SDL_Texture* tex = player.idleTexture;
